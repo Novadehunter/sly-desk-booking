@@ -49,12 +49,12 @@ export const BookingCalendar = ({ bookings, onBookingAdded }: BookingCalendarPro
             </div>
           </div>
           <Button
-            variant="secondary"
+            size="lg"
             onClick={() => setShowBookingForm(true)}
-            className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+            className="bg-white text-primary hover:bg-white/90 font-semibold px-6 py-3 shadow-lg"
           >
-            <Plus className="h-4 w-4 mr-2" />
-            New Booking
+            <Plus className="h-5 w-5 mr-2" />
+            Book Auditorium
           </Button>
         </div>
       </div>
@@ -133,10 +133,17 @@ export const BookingCalendar = ({ bookings, onBookingAdded }: BookingCalendarPro
           </CardHeader>
           <CardContent>
             {getBookingsForDate(selectedDate).length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <div className="text-center py-8">
+                <Clock className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
                 <p className="text-lg font-medium mb-2">No bookings for this day</p>
-                <p className="text-sm">The auditorium is available all day</p>
+                <p className="text-sm text-muted-foreground mb-4">The auditorium is available all day</p>
+                <Button
+                  onClick={() => setShowBookingForm(true)}
+                  className="bg-gradient-primary hover:bg-gradient-hero"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Book This Day
+                </Button>
               </div>
             ) : (
               <div className="space-y-3">
