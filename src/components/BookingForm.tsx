@@ -342,7 +342,7 @@ export const BookingForm = ({
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 bg-gradient-primary hover:bg-gradient-hero"
+                className="flex-1 bg-primary hover:bg-primary-dark text-primary-foreground"
               >
                 {isSubmitting ? 'Creating...' : 'Book Auditorium'}
               </Button>

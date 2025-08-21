@@ -139,7 +139,7 @@ export const BookingCalendar = ({ bookings, onBookingAdded }: BookingCalendarPro
                 <p className="text-sm text-muted-foreground mb-4">The auditorium is available all day</p>
                 <Button
                   onClick={() => setShowBookingForm(true)}
-                  className="bg-gradient-primary hover:bg-gradient-hero"
+                  className="bg-primary hover:bg-primary-dark text-primary-foreground"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Book This Day
