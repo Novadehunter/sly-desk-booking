@@ -2,41 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Ministry Auditorium Booking System - Design System */
 
 @layer base {
   :root {
+    /* Core brand colors - Professional government theme */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 215 25% 15%;
 
+    /* Primary - Deep teal for official feel */
+    --primary: 184 75% 25%;
+    --primary-light: 184 65% 35%;
+    --primary-dark: 184 85% 15%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Warm gray */
+    --secondary: 210 8% 94%;
+    --secondary-dark: 210 8% 88%;
+    --secondary-foreground: 215 25% 15%;
+
+    /* Accent - Bright teal */
+    --accent: 184 85% 35%;
+    --accent-light: 184 75% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Status colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 0 74% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* UI elements */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 15%;
+    --border: 214 15% 88%;
+    --input: 214 15% 95%;
+    --ring: 184 75% 25%;
+    --muted: 210 8% 96%;
+    --muted-foreground: 215 15% 45%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Booking system specific */
+    --booking-available: 142 76% 96%;
+    --booking-occupied: 0 74% 96%;
+    --booking-selected: 184 75% 96%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary-dark)), hsl(var(--accent)));
+    --gradient-card: linear-gradient(180deg, hsl(var(--card)), hsl(var(--muted)));
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Shadows */
+    --shadow-card: 0 2px 8px hsl(var(--primary) / 0.1);
+    --shadow-booking: 0 4px 12px hsl(var(--primary) / 0.15);
+    --shadow-header: 0 2px 4px hsl(var(--primary) / 0.1);
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,41 +82,39 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    /* Dark mode colors */
+    --background: 215 25% 8%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 215 25% 10%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --primary: 184 85% 45%;
+    --primary-light: 184 75% 55%;
+    --primary-dark: 184 95% 35%;
+    --primary-foreground: 215 25% 8%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 215 20% 15%;
+    --secondary-dark: 215 20% 12%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 184 95% 50%;
+    --accent-light: 184 85% 60%;
+    --accent-foreground: 215 25% 8%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --border: 215 20% 20%;
+    --input: 215 20% 15%;
+    --ring: 184 85% 45%;
+    --muted: 215 20% 12%;
+    --muted-foreground: 215 15% 65%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --booking-available: 142 76% 12%;
+    --booking-occupied: 0 74% 12%;
+    --booking-selected: 184 75% 12%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary-dark)), hsl(var(--primary)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary-light)));
+    --gradient-card: linear-gradient(180deg, hsl(var(--card)), hsl(var(--muted)));
   }
 }
 
