@@ -231,15 +231,24 @@ export const BookingForm = ({
                   <FormItem className="md:col-span-2">
                     <FormLabel className="flex items-center gap-2">
                       <Building className="h-4 w-4" />
-                      Department (Optional)
+                      Branch/Department
                     </FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Department or Division"
-                        className="focus:ring-accent"
-                        {...field} 
-                      />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="focus:ring-accent">
+                          <SelectValue placeholder="Select your branch/department" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Technical">Technical</SelectItem>
+                        <SelectItem value="Planning">Planning</SelectItem>
+                        <SelectItem value="Accounts">Accounts</SelectItem>
+                        <SelectItem value="Development">Development</SelectItem>
+                        <SelectItem value="Admin">Admin</SelectItem>
+                        <SelectItem value="Legal">Legal</SelectItem>
+                        <SelectItem value="Secretary Office">Secretary Office</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

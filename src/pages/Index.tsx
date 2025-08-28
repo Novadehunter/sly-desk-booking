@@ -112,7 +112,7 @@ const Index = () => {
         {totalBookings === 0 && (
           <Card className="mt-8 bg-gradient-card shadow-card border-accent/20">
             <CardHeader>
-              <CardTitle className="text-primary">Welcome to the Ministry Auditorium Booking System</CardTitle>
+              <CardTitle className="text-primary">Welcome to the Ministry of Transport Auditorium Book System</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">

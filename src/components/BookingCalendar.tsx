@@ -44,7 +44,7 @@ export const BookingCalendar = ({ bookings, onBookingAdded }: BookingCalendarPro
           <div className="flex items-center gap-3">
             <Calendar className="h-8 w-8" />
             <div>
-              <h1 className="text-2xl font-bold">Ministry Auditorium</h1>
+              <h1 className="text-2xl font-bold">Ministry of Transport Auditorium Book System</h1>
               <p className="text-primary-foreground/80">Weekly Booking System</p>
             </div>
           </div>
