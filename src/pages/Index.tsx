@@ -3,8 +3,11 @@ import { BookingCalendar } from '@/components/BookingCalendar';
 import { BookingSlot } from '@/types/booking';
 import { sheetsService } from '@/lib/sheets';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Building, Users, Clock } from 'lucide-react';
+import { Loader2, Building, Users, Clock, Calendar, MapPin } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
 
 const Index = () => {
   const [bookings, setBookings] = useState<BookingSlot[]>([]);
@@ -45,6 +48,24 @@ const Index = () => {
 
   const uniqueUsers = new Set(bookings.map(booking => booking.bookedBy)).size;
 
+  const formatTime = (time: string) => {
+    const [hours, minutes] = time.split(':');
+    const hour24 = parseInt(hours);
+    const ampm = hour24 >= 12 ? 'PM' : 'AM';
+    const hour12 = hour24 % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
@@ -62,31 +83,130 @@ const Index = () => {
       <div className="container mx-auto p-6 max-w-7xl">
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gradient-card shadow-card">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
-              <Building className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-primary">{totalBookings}</div>
-              <p className="text-xs text-muted-foreground">
-                All time bookings
-              </p>
-            </CardContent>
-          </Card>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Card className="bg-gradient-card shadow-card cursor-pointer hover:shadow-lg transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
+                  <Building className="h-4 w-4 text-primary" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-primary">{totalBookings}</div>
+                  <p className="text-xs text-muted-foreground">
+                    All time bookings - Click to view
+                  </p>
+                </CardContent>
+              </Card>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh]">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Building className="h-5 w-5 text-primary" />
+                  All Bookings ({totalBookings})
+                </DialogTitle>
+              </DialogHeader>
+              <ScrollArea className="h-[60vh] w-full">
+                <div className="space-y-3 pr-4">
+                  {bookings.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">No bookings found</p>
+                  ) : (
+                    bookings.map((booking, index) => (
+                      <div key={booking.id || index} className="border rounded-lg p-4 bg-card">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-1">
+                            <h4 className="font-semibold text-card-foreground">{booking.title}</h4>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                {formatDate(booking.date)}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                              <span>By: <strong>{booking.bookedBy}</strong></span>
+                              {booking.department && (
+                                <Badge variant="secondary">{booking.department}</Badge>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
           
-          <Card className="bg-gradient-card shadow-card">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Today's Meetings</CardTitle>
-              <Clock className="h-4 w-4 text-accent" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-accent">{todayBookings}</div>
-              <p className="text-xs text-muted-foreground">
-                Active meetings today
-              </p>
-            </CardContent>
-          </Card>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Card className="bg-gradient-card shadow-card cursor-pointer hover:shadow-lg transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Today's Meetings</CardTitle>
+                  <Clock className="h-4 w-4 text-accent" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-accent">{todayBookings}</div>
+                  <p className="text-xs text-muted-foreground">
+                    Active meetings today - Click to view
+                  </p>
+                </CardContent>
+              </Card>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh]">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-accent" />
+                  Today's Meetings ({todayBookings})
+                </DialogTitle>
+              </DialogHeader>
+              <ScrollArea className="h-[60vh] w-full">
+                <div className="space-y-3 pr-4">
+                  {bookings.filter(booking => {
+                    const today = new Date().toISOString().split('T')[0];
+                    return booking.date === today;
+                  }).length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">No meetings scheduled for today</p>
+                  ) : (
+                    bookings
+                      .filter(booking => {
+                        const today = new Date().toISOString().split('T')[0];
+                        return booking.date === today;
+                      })
+                      .sort((a, b) => a.startTime.localeCompare(b.startTime))
+                      .map((booking, index) => (
+                        <div key={booking.id || index} className="border rounded-lg p-4 bg-card">
+                          <div className="flex items-start justify-between">
+                            <div className="space-y-1">
+                              <h4 className="font-semibold text-card-foreground">{booking.title}</h4>
+                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                <span className="flex items-center gap-1">
+                                  <Clock className="h-3 w-3" />
+                                  {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <MapPin className="h-3 w-3" />
+                                  Main Auditorium
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 text-sm">
+                                <span>By: <strong>{booking.bookedBy}</strong></span>
+                                {booking.department && (
+                                  <Badge variant="secondary">{booking.department}</Badge>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                  )}
+                </div>
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
           
           <Card className="bg-gradient-card shadow-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
