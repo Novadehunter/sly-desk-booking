@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookingSlot } from '@/types/booking';
 import { BookingForm } from './BookingForm';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 interface BookingCalendarProps {
@@ -13,6 +14,7 @@ interface BookingCalendarProps {
 }
 
 export const BookingCalendar = ({ bookings, onBookingAdded }: BookingCalendarProps) => {
+  const { user } = useAuth();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [weekDays, setWeekDays] = useState<Date[]>([]);
@@ -52,6 +54,7 @@ export const BookingCalendar = ({ bookings, onBookingAdded }: BookingCalendarPro
             size="lg"
             onClick={() => setShowBookingForm(true)}
             className="bg-white text-primary hover:bg-white/90 font-semibold px-6 py-3 shadow-lg"
+            disabled={!user}
           >
             <Plus className="h-5 w-5 mr-2" />
             Book Auditorium
@@ -140,6 +143,7 @@ export const BookingCalendar = ({ bookings, onBookingAdded }: BookingCalendarPro
                 <Button
                   onClick={() => setShowBookingForm(true)}
                   className="bg-primary hover:bg-primary-dark text-primary-foreground"
+                  disabled={!user}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Book This Day

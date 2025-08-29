@@ -13,7 +13,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BookingSlot, BookingFormData } from '@/types/booking';
-import { sheetsService } from '@/lib/sheets';
+import { bookingsService } from '@/lib/bookings';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -50,6 +51,7 @@ export const BookingForm = ({
   preselectedDate,
   existingBookings 
 }: BookingFormProps) => {
+  const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [conflictError, setConflictError] = useState<string>('');
   const { toast } = useToast();
@@ -100,11 +102,20 @@ export const BookingForm = ({
   };
 
   const onSubmit = async (data: BookingFormData) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "You must be signed in to make a booking.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     setConflictError('');
 
     // Check for time conflicts
-    const hasConflict = sheetsService.checkTimeConflict(
+    const hasConflict = bookingsService.checkTimeConflict(
       data.date,
       data.startTime,
       data.endTime,
@@ -118,7 +129,7 @@ export const BookingForm = ({
     }
 
     try {
-      const success = await sheetsService.addBooking(data);
+      const success = await bookingsService.addBooking(data, user.id);
       
       if (success) {
         toast({
