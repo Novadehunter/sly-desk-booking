@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 
 interface BookingCalendarProps {
   bookings: BookingSlot[];
-  onBookingAdded: () => void;
+  onBookingAdded?: () => void;
 }
 
 export const BookingCalendar = ({ bookings, onBookingAdded }: BookingCalendarProps) => {
@@ -188,7 +188,7 @@ export const BookingCalendar = ({ bookings, onBookingAdded }: BookingCalendarPro
         <BookingForm
           isOpen={showBookingForm}
           onClose={() => setShowBookingForm(false)}
-          onBookingAdded={onBookingAdded}
+          onBookingAdded={onBookingAdded || (() => {})}
           preselectedDate={selectedDate}
           existingBookings={bookings}
         />

@@ -6,6 +6,7 @@ import { PostsList } from '@/components/PostsList';
 import { BookingSlot } from '@/types/booking';
 import { bookingsService } from '@/lib/bookings';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Building, Users, Clock, Calendar, LogOut, User } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -21,39 +22,108 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchBookings = async () => {
-    if (!user) return;
-    
-    try {
-      setLoading(true);
-      const fetchedBookings = await bookingsService.getBookings();
-      setBookings(fetchedBookings);
-    } catch (error) {
-      console.error('Error fetching bookings:', error);
-      toast({
-        title: "Error Loading Bookings",
-        description: "Failed to load bookings. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (user) {
-      fetchBookings();
-    }
-  }, [user]);
+    if (!user) return;
+
+    const fetchInitialBookings = async () => {
+      try {
+        setLoading(true);
+        const fetchedBookings = await bookingsService.getBookings();
+        setBookings(fetchedBookings);
+      } catch (error) {
+        console.error('Error fetching initial bookings:', error);
+        toast({
+          title: "Error Loading Bookings",
+          description: "Failed to load bookings. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Fetch initial data
+    fetchInitialBookings();
+
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('bookings-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bookings'
+        },
+        (payload) => {
+          console.log('Real-time change:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            const newBooking = {
+              id: payload.new.id,
+              date: payload.new.date,
+              startTime: payload.new.start_time,
+              endTime: payload.new.end_time,
+              title: payload.new.title,
+              bookedBy: payload.new.booked_by,
+              email: payload.new.email || undefined,
+              department: payload.new.department || undefined,
+              createdAt: payload.new.created_at,
+            } as BookingSlot;
+            
+            setBookings(current => [...current, newBooking]);
+            
+            toast({
+              title: "New Booking Added",
+              description: `${newBooking.title} has been booked by ${newBooking.bookedBy}`,
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedBooking = {
+              id: payload.new.id,
+              date: payload.new.date,
+              startTime: payload.new.start_time,
+              endTime: payload.new.end_time,
+              title: payload.new.title,
+              bookedBy: payload.new.booked_by,
+              email: payload.new.email || undefined,
+              department: payload.new.department || undefined,
+              createdAt: payload.new.created_at,
+            } as BookingSlot;
+            
+            setBookings(current => 
+              current.map(booking => 
+                booking.id === updatedBooking.id ? updatedBooking : booking
+              )
+            );
+            
+            toast({
+              title: "Booking Updated",
+              description: `${updatedBooking.title} has been updated`,
+            });
+          } else if (payload.eventType === 'DELETE') {
+            setBookings(current => 
+              current.filter(booking => booking.id !== payload.old.id)
+            );
+            
+            toast({
+              title: "Booking Deleted",
+              description: "A booking has been cancelled",
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, toast]);
 
   // Redirect to auth if not logged in (after all hooks)
   if (!authLoading && !user) {
     return <Navigate to="/auth" replace />;
   }
-
-  const handleBookingAdded = () => {
-    fetchBookings();
-  };
 
   const handleSignOut = async () => {
     try {
@@ -290,7 +360,6 @@ const Index = () => {
             {/* Main Calendar */}
             <BookingCalendar 
               bookings={bookings} 
-              onBookingAdded={handleBookingAdded}
             />
           </TabsContent>
 
