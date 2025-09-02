@@ -85,6 +85,16 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			backgroundImage: {
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-hero': 'var(--gradient-hero)',
+				'gradient-card': 'var(--gradient-card)',
+			},
+			boxShadow: {
+				'card': 'var(--shadow-card)',
+				'booking': 'var(--shadow-booking)',
+				'header': 'var(--shadow-header)',
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
@@ -115,6 +125,11 @@ export default {
 					'50%': { transform: 'scale(1.02)' },
 					'100%': { transform: 'scale(1)' }
 				}
+			},
+			animation: {
+				'fade-in': 'fadeIn 0.5s ease-in-out',
+				'slide-up': 'slideUp 0.3s ease-out',
+				'booking-bounce': 'bookingBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
 			},
 		}
 	},
