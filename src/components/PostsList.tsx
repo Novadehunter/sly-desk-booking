@@ -64,13 +64,11 @@ export const PostsList = () => {
 
       if (postsError) throw postsError;
 
-      // Fetch profiles for each unique user_id
+      // Fetch profiles for each unique user_id using secure function
       const userIds = [...new Set(postsData?.map(post => post.user_id) || [])];
       
       const { data: profilesData, error: profilesError } = await supabase
-        .from('profiles')
-        .select('user_id, display_name, department')
-        .in('user_id', userIds);
+        .rpc('get_public_profile_data', { user_ids: userIds });
 
       if (profilesError) throw profilesError;
 
