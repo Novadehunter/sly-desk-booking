@@ -21,11 +21,6 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  // Redirect to auth if not logged in
-  if (!authLoading && !user) {
-    return <Navigate to="/auth" replace />;
-  }
-
   const fetchBookings = async () => {
     if (!user) return;
     
@@ -50,6 +45,11 @@ const Index = () => {
       fetchBookings();
     }
   }, [user]);
+
+  // Redirect to auth if not logged in (after all hooks)
+  if (!authLoading && !user) {
+    return <Navigate to="/auth" replace />;
+  }
 
   const handleBookingAdded = () => {
     fetchBookings();
