@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { BookingCalendar } from '@/components/BookingCalendar';
+import { Dashboard } from '@/components/Dashboard';
 import { PostsList } from '@/components/PostsList';
 import { BookingSlot } from '@/types/booking';
 import { bookingsService } from '@/lib/bookings';
@@ -214,8 +215,9 @@ const Index = () => {
 
       <div className="container mx-auto p-6 max-w-7xl">
         <Tabs defaultValue="bookings" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 max-w-md">
+          <TabsList className="grid w-full grid-cols-3 max-w-lg">
             <TabsTrigger value="bookings">Auditorium Bookings</TabsTrigger>
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="updates">Ministry Updates</TabsTrigger>
           </TabsList>
 
@@ -361,6 +363,21 @@ const Index = () => {
             <BookingCalendar 
               bookings={bookings} 
             />
+          </TabsContent>
+
+          <TabsContent value="dashboard">
+            <Dashboard bookings={bookings} onBookingUpdated={() => {
+              // Refetch bookings when a booking is updated
+              const fetchBookings = async () => {
+                try {
+                  const fetchedBookings = await bookingsService.getBookings();
+                  setBookings(fetchedBookings);
+                } catch (error) {
+                  console.error('Error refetching bookings:', error);
+                }
+              };
+              fetchBookings();
+            }} />
           </TabsContent>
 
           <TabsContent value="updates">

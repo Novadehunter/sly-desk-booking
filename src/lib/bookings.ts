@@ -51,6 +51,49 @@ export const bookingsService = {
     }
   },
 
+  async updateBooking(bookingId: string, bookingData: BookingFormData, userId: string): Promise<boolean> {
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({
+          date: bookingData.date,
+          start_time: bookingData.startTime,
+          end_time: bookingData.endTime,
+          title: bookingData.title,
+          booked_by: bookingData.bookedBy,
+          email: bookingData.email,
+          department: bookingData.department,
+        })
+        .eq('id', bookingId)
+        .eq('user_id', userId);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error updating booking:', error);
+      throw error;
+    }
+  },
+
+  async deleteBooking(bookingId: string): Promise<boolean> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      const { error } = await supabase
+        .from('bookings')
+        .delete()
+        .eq('id', bookingId)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error deleting booking:', error);
+      throw error;
+    }
+  },
+
   checkTimeConflict(
     date: string,
     startTime: string,
