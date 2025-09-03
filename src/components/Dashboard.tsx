@@ -115,46 +115,285 @@ export const Dashboard = ({ bookings, onBookingUpdated }: DashboardProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Dashboard Stats */}
+      {/* Dashboard Stats - Clickable Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-gradient-card shadow-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">My Bookings</CardTitle>
-            <User className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">{userBookings.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Total bookings made by you
-            </p>
-          </CardContent>
-        </Card>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Card className="bg-gradient-card shadow-card cursor-pointer hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">My Bookings</CardTitle>
+                <User className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{userBookings.length}</div>
+                <p className="text-xs text-muted-foreground">
+                  Total bookings made by you - Click to view
+                </p>
+              </CardContent>
+            </Card>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl max-h-[80vh]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <User className="h-5 w-5 text-primary" />
+                My Bookings ({userBookings.length})
+              </DialogTitle>
+            </DialogHeader>
+            <ScrollArea className="h-[60vh] w-full">
+              <div className="space-y-3 pr-4">
+                {userBookings.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">No bookings found</p>
+                ) : (
+                  userBookings
+                    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                    .map((booking) => (
+                      <div key={booking.id} className="border rounded-lg p-4 bg-card">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-card-foreground">{booking.title}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {format(new Date(booking.date), 'PPP')}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+                            </p>
+                            {booking.department && (
+                              <Badge variant="secondary">{booking.department}</Badge>
+                            )}
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditBooking(booking);
+                              }}
+                              className="flex items-center gap-1"
+                            >
+                              <Edit className="h-3 w-3" />
+                              Edit
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button 
+                                  variant="destructive" 
+                                  size="sm" 
+                                  className="flex items-center gap-1"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                  Delete
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This will permanently delete your booking "{booking.title}". This action cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => handleDeleteBooking(booking.id)}>
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                )}
+              </div>
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
 
-        <Card className="bg-gradient-card shadow-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Upcoming</CardTitle>
-            <CalendarIcon className="h-4 w-4 text-accent" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-accent">{upcomingBookings.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Future bookings scheduled
-            </p>
-          </CardContent>
-        </Card>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Card className="bg-gradient-card shadow-card cursor-pointer hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Upcoming</CardTitle>
+                <CalendarIcon className="h-4 w-4 text-accent" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-accent">{upcomingBookings.length}</div>
+                <p className="text-xs text-muted-foreground">
+                  Future bookings scheduled - Click to view
+                </p>
+              </CardContent>
+            </Card>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl max-h-[80vh]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <CalendarIcon className="h-5 w-5 text-accent" />
+                Upcoming Bookings ({upcomingBookings.length})
+              </DialogTitle>
+            </DialogHeader>
+            <ScrollArea className="h-[60vh] w-full">
+              <div className="space-y-3 pr-4">
+                {upcomingBookings.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">No upcoming bookings</p>
+                ) : (
+                  upcomingBookings.map((booking) => (
+                    <div key={booking.id} className="border rounded-lg p-4 bg-card">
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-card-foreground">{booking.title}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {format(new Date(booking.date), 'PPP')}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+                          </p>
+                          {booking.department && (
+                            <Badge variant="secondary">{booking.department}</Badge>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditBooking(booking);
+                            }}
+                            className="flex items-center gap-1"
+                          >
+                            <Edit className="h-3 w-3" />
+                            Edit
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button 
+                                variant="destructive" 
+                                size="sm" 
+                                className="flex items-center gap-1"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                                Delete
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This will permanently delete your booking "{booking.title}". This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDeleteBooking(booking.id)}>
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
 
-        <Card className="bg-gradient-card shadow-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Meetings</CardTitle>
-            <Clock className="h-4 w-4 text-success" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-success">{selectedDateBookings.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Meetings for selected date
-            </p>
-          </CardContent>
-        </Card>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Card className="bg-gradient-card shadow-card cursor-pointer hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Today's Meetings</CardTitle>
+                <Clock className="h-4 w-4 text-success" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-success">{selectedDateBookings.length}</div>
+                <p className="text-xs text-muted-foreground">
+                  Meetings for selected date - Click to view
+                </p>
+              </CardContent>
+            </Card>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl max-h-[80vh]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Clock className="h-5 w-5 text-success" />
+                Today's Meetings ({selectedDateBookings.length})
+              </DialogTitle>
+            </DialogHeader>
+            <ScrollArea className="h-[60vh] w-full">
+              <div className="space-y-3 pr-4">
+                {selectedDateBookings.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">No meetings for selected date</p>
+                ) : (
+                  selectedDateBookings
+                    .sort((a, b) => a.startTime.localeCompare(b.startTime))
+                    .map((booking) => (
+                      <div key={booking.id} className="border rounded-lg p-4 bg-card">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-card-foreground">{booking.title}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+                            </p>
+                            <p className="text-sm text-muted-foreground">By: {booking.bookedBy}</p>
+                            {booking.department && (
+                              <Badge variant="secondary">{booking.department}</Badge>
+                            )}
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditBooking(booking);
+                              }}
+                              className="flex items-center gap-1"
+                            >
+                              <Edit className="h-3 w-3" />
+                              Edit
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button 
+                                  variant="destructive" 
+                                  size="sm" 
+                                  className="flex items-center gap-1"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                  Delete
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This will permanently delete your booking "{booking.title}". This action cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => handleDeleteBooking(booking.id)}>
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                )}
+              </div>
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Main Dashboard Content */}
