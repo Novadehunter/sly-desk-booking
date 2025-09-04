@@ -138,6 +138,21 @@ const Index = () => {
     }
   };
 
+  // Refetch bookings function for both components
+  const handleRefreshBookings = async () => {
+    try {
+      const fetchedBookings = await bookingsService.getBookings();
+      setBookings(fetchedBookings);
+    } catch (error) {
+      console.error('Error refetching bookings:', error);
+      toast({
+        title: "Sync Failed",
+        description: "Failed to sync booking data. Please refresh the page.",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Statistics
   const todayBookings = bookings.filter(booking => {
     const today = new Date().toISOString().split('T')[0];
@@ -362,22 +377,12 @@ const Index = () => {
             {/* Main Calendar */}
             <BookingCalendar 
               bookings={bookings} 
+              onBookingAdded={handleRefreshBookings}
             />
           </TabsContent>
 
           <TabsContent value="dashboard">
-            <Dashboard bookings={bookings} onBookingUpdated={() => {
-              // Refetch bookings when a booking is updated
-              const fetchBookings = async () => {
-                try {
-                  const fetchedBookings = await bookingsService.getBookings();
-                  setBookings(fetchedBookings);
-                } catch (error) {
-                  console.error('Error refetching bookings:', error);
-                }
-              };
-              fetchBookings();
-            }} />
+            <Dashboard bookings={bookings} onBookingUpdated={handleRefreshBookings} />
           </TabsContent>
 
           <TabsContent value="updates">
