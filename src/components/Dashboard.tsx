@@ -36,8 +36,11 @@ export const Dashboard = ({ bookings, onBookingUpdated }: DashboardProps) => {
     department: ''
   });
 
-  // Filter bookings for current user
-  const userBookings = bookings.filter(booking => booking.email === user?.email);
+  // Filter bookings for current user using user_id from the database
+  const userBookings = bookings.filter(booking => {
+    // Check if booking has a user_id field and match it with authenticated user
+    return booking.id && user?.id && booking.user_id === user.id;
+  });
   
   // Get bookings for selected date
   const selectedDateBookings = userBookings.filter(booking => 
