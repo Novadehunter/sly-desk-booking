@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { BookingCalendar } from '@/components/BookingCalendar';
-import { Dashboard } from '@/components/Dashboard';
+import { MyBookings } from '@/components/MyBookings';
 import { PostsList } from '@/components/PostsList';
 import { BookingSlot } from '@/types/booking';
 import { bookingsService } from '@/lib/bookings';
@@ -232,7 +232,7 @@ const Index = () => {
         <Tabs defaultValue="bookings" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 max-w-lg">
             <TabsTrigger value="bookings">Auditorium Bookings</TabsTrigger>
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="my-bookings">My Bookings</TabsTrigger>
             <TabsTrigger value="updates">Ministry Updates</TabsTrigger>
           </TabsList>
 
@@ -381,8 +381,8 @@ const Index = () => {
             />
           </TabsContent>
 
-          <TabsContent value="dashboard">
-            <Dashboard bookings={bookings} onBookingUpdated={handleRefreshBookings} />
+          <TabsContent value="my-bookings">
+            <MyBookings bookings={bookings} onBookingUpdated={handleRefreshBookings} />
           </TabsContent>
 
           <TabsContent value="updates">
