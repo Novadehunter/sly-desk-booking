@@ -34,7 +34,8 @@ class SheetsService {
         bookedBy: row[5] || '',
         email: row[6] || '',
         department: row[7] || '',
-        createdAt: row[8] || new Date().toISOString()
+        createdAt: row[8] || new Date().toISOString(),
+        user_id: row[9] || 'unknown-user' // Fallback for legacy data
       }));
     } catch (error) {
       console.error('Error fetching bookings:', error);
@@ -47,7 +48,8 @@ class SheetsService {
     const newBooking: BookingSlot = {
       id: `booking-${Date.now()}`,
       ...booking,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      user_id: 'unknown-user' // Fallback for sheets service
     };
 
     try {

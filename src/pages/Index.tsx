@@ -70,6 +70,7 @@ const Index = () => {
               email: payload.new.email || undefined,
               department: payload.new.department || undefined,
               createdAt: payload.new.created_at,
+              user_id: payload.new.user_id,
             } as BookingSlot;
             
             setBookings(current => [...current, newBooking]);
@@ -89,6 +90,7 @@ const Index = () => {
               email: payload.new.email || undefined,
               department: payload.new.department || undefined,
               createdAt: payload.new.created_at,
+              user_id: payload.new.user_id,
             } as BookingSlot;
             
             setBookings(current => 

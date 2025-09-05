@@ -21,6 +21,7 @@ export const bookingsService = {
         email: booking.email || undefined,
         department: booking.department || undefined,
         createdAt: booking.created_at,
+        user_id: booking.user_id,
       })) || [];
     } catch (error) {
       console.error('Error fetching bookings:', error);

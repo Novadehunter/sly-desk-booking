@@ -8,7 +8,7 @@ export interface BookingSlot {
   email?: string;
   department?: string;
   createdAt: string;
-  user_id?: string;
+  user_id: string;
 }
 
 export interface TimeSlot {
