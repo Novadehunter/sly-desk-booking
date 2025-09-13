@@ -258,6 +258,8 @@ export const BookingForm = ({
                         <SelectItem value="Admin">Admin</SelectItem>
                         <SelectItem value="Legal">Legal</SelectItem>
                         <SelectItem value="Secretary Office">Secretary Office</SelectItem>
+                        <SelectItem value="Railway admin">Railway admin</SelectItem>
+                        <SelectItem value="Internal Audit">Internal Audit</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
