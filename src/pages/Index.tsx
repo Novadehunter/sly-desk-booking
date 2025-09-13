@@ -243,7 +243,7 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Card className="bg-gradient-card shadow-card">
+                  <Card className="bg-gradient-card shadow-card cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
                       <Building className="h-4 w-4 text-success" />
@@ -301,7 +301,7 @@ const Index = () => {
               
               <Dialog>
                 <DialogTrigger asChild>
-                  <Card className="bg-gradient-card shadow-card">
+                  <Card className="bg-gradient-card shadow-card cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">Today's Meetings</CardTitle>
                       <Clock className="h-4 w-4 text-success" />
@@ -362,7 +362,7 @@ const Index = () => {
                 </DialogContent>
               </Dialog>
               
-              <Card className="bg-gradient-card shadow-card">
+              <Card className="bg-gradient-card shadow-card cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Active Users</CardTitle>
                   <Users className="h-4 w-4 text-success" />
