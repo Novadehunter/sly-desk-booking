@@ -269,11 +269,11 @@ const Index = () => {
                         <p className="text-muted-foreground text-center py-8">No bookings found</p>
                       ) : (
                         bookings.map((booking, index) => (
-                          <div key={booking.id || index} className="border rounded-lg p-4 bg-card">
+                          <div key={booking.id || index} className="bg-gradient-primary rounded-lg p-4 border-0 shadow-booking hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
                             <div className="flex items-start justify-between">
                               <div className="space-y-1">
-                                <h4 className="font-semibold text-card-foreground">{booking.title}</h4>
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                <h4 className="font-semibold text-primary-foreground">{booking.title}</h4>
+                                <div className="flex items-center gap-4 text-sm text-primary-foreground/80">
                                   <span className="flex items-center gap-1">
                                     <Calendar className="h-3 w-3" />
                                     {formatDate(booking.date)}
@@ -284,9 +284,9 @@ const Index = () => {
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-sm">
-                                  <span>By: <strong>{booking.bookedBy}</strong></span>
+                                  <span className="text-primary-foreground/90">By: <strong className="text-primary-foreground">{booking.bookedBy}</strong></span>
                                   {booking.department && (
-                                    <Badge variant="secondary">{booking.department}</Badge>
+                                    <Badge variant="secondary" className="bg-white/20 text-primary-foreground border-white/30">{booking.department}</Badge>
                                   )}
                                 </div>
                               </div>
@@ -336,20 +336,20 @@ const Index = () => {
                           })
                           .sort((a, b) => a.startTime.localeCompare(b.startTime))
                           .map((booking, index) => (
-                            <div key={booking.id || index} className="border rounded-lg p-4 bg-card">
+                            <div key={booking.id || index} className="bg-gradient-hero rounded-lg p-4 border-0 shadow-booking hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
                               <div className="flex items-start justify-between">
                                 <div className="space-y-1">
-                                  <h4 className="font-semibold text-card-foreground">{booking.title}</h4>
-                                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                  <h4 className="font-semibold text-accent-foreground">{booking.title}</h4>
+                                  <div className="flex items-center gap-4 text-sm text-accent-foreground/80">
                                     <span className="flex items-center gap-1">
                                       <Clock className="h-3 w-3" />
                                       {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
                                     </span>
                                   </div>
                                   <div className="flex items-center gap-2 text-sm">
-                                    <span>By: <strong>{booking.bookedBy}</strong></span>
+                                    <span className="text-accent-foreground/90">By: <strong className="text-accent-foreground">{booking.bookedBy}</strong></span>
                                     {booking.department && (
-                                      <Badge variant="secondary">{booking.department}</Badge>
+                                      <Badge variant="secondary" className="bg-white/20 text-accent-foreground border-white/30">{booking.department}</Badge>
                                     )}
                                   </div>
                                 </div>
