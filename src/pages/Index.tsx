@@ -243,14 +243,14 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Card className="bg-gradient-primary shadow-booking cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 border-0">
+                  <Card className="bg-gradient-card shadow-card">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium text-primary-foreground">Total Bookings</CardTitle>
-                      <Building className="h-4 w-4 text-primary-foreground/80" />
+                      <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
+                      <Building className="h-4 w-4 text-success" />
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold text-primary-foreground">{bookings.length}</div>
-                      <p className="text-xs text-primary-foreground/70">
+                      <div className="text-2xl font-bold text-success">{bookings.length}</div>
+                      <p className="text-xs text-muted-foreground">
                         All time bookings - Click to view
                       </p>
                     </CardContent>
@@ -301,14 +301,14 @@ const Index = () => {
               
               <Dialog>
                 <DialogTrigger asChild>
-                  <Card className="bg-gradient-hero shadow-booking cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 border-0">
+                  <Card className="bg-gradient-card shadow-card">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium text-accent-foreground">Today's Meetings</CardTitle>
-                      <Clock className="h-4 w-4 text-accent-foreground/80" />
+                      <CardTitle className="text-sm font-medium">Today's Meetings</CardTitle>
+                      <Clock className="h-4 w-4 text-success" />
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold text-accent-foreground">{todayBookings}</div>
-                      <p className="text-xs text-accent-foreground/70">
+                      <div className="text-2xl font-bold text-success">{todayBookings}</div>
+                      <p className="text-xs text-muted-foreground">
                         Active meetings today - Click to view
                       </p>
                     </CardContent>
